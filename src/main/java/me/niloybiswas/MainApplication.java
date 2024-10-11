@@ -10,7 +10,7 @@ import java.util.Objects;
 
 
 public class MainApplication {
-    public static void main(String[] args) throws LifecycleException {
+    public static void main(String[] args) throws LifecycleException, ClassNotFoundException {
         /*Tomcat tomcat = new Tomcat();
         tomcat.setBaseDir("tmp");
         Connector connector = new Connector();
@@ -56,16 +56,10 @@ public class MainApplication {
         URL resource = classLoader.getResource(Utils.convertPackageToPath(packageName));
         System.out.println("resource = " + resource);
 
-        File resourceFile = new File(Objects.requireNonNull(resource).getPath());
-        /*File[] files = resourceFile.listFiles();
-        for (File file : files) {
-            System.out.println("file.getName() = " + file.getName());
-        }*/
-        List<String> files = Utils.recursiveFiles(resourceFile.getAbsolutePath());
-        for (String file : files) {
-            System.out.println("file = " + file);
+        File resourceFile = new File(resource.getPath());
+        List<Class<?>> classes = Utils.getRecursiveClasses(resourceFile.getAbsolutePath(), packageName);
+        for(Class<?> clazz : classes) {
+            System.out.println("clazz.getName() = " + clazz.getName());
         }
     }
-
-
 }

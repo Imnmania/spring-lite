@@ -9,22 +9,23 @@ public class Utils {
         return packageName.replace(".", "/");
     }
 
-    public static List<String> recursiveFiles(String filePath) {
+    public static List<Class<?>> getRecursiveClasses(String filePath, String packageName) throws ClassNotFoundException {
         // files must be in a directory
         File file = new File(filePath);
         if (!file.isDirectory()) {
             return new ArrayList<>();
         }
         // return filenames when they are within the package/directory
-        List<String> fileList = new ArrayList<>();
+        List<Class<?>> classList = new ArrayList<>();
         File[] subFiles = file.listFiles();
         for (File newFile : subFiles) {
-            if (newFile.isFile()) {
-                fileList.add(newFile.getAbsolutePath());
+            if (newFile.isFile() && newFile.getName().endsWith(".class")) {
+                String className = packageName + "." + newFile.getName().replace(".class", "");
+                classList.add(Class.forName(className));
             } else {
-                fileList.addAll(recursiveFiles(newFile.getAbsolutePath()));
+                classList.addAll(getRecursiveClasses(newFile.getAbsolutePath(), packageName + "." + newFile.getName()));
             }
         }
-        return fileList;
+        return classList;
     }
 }
