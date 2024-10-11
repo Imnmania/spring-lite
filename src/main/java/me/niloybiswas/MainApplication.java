@@ -1,22 +1,17 @@
 package me.niloybiswas;
 
-import me.niloybiswas.controllers.HomeServlet;
-import me.niloybiswas.controllers.ProductController;
-import me.niloybiswas.controllers.ProductServlet;
-import me.niloybiswas.controllers.SearchServlet;
-import me.niloybiswas.repositories.ProductRepository;
-import me.niloybiswas.services.ProductService;
-import me.niloybiswas.services.SearchService;
-import org.apache.catalina.Context;
+import me.niloybiswas.core.Utils;
 import org.apache.catalina.LifecycleException;
-import org.apache.catalina.connector.Connector;
-import org.apache.catalina.startup.Tomcat;
 
 import java.io.File;
+import java.net.URL;
+import java.util.List;
+import java.util.Objects;
+
 
 public class MainApplication {
     public static void main(String[] args) throws LifecycleException {
-        Tomcat tomcat = new Tomcat();
+        /*Tomcat tomcat = new Tomcat();
         tomcat.setBaseDir("tmp");
         Connector connector = new Connector();
         connector.setPort(9999);
@@ -52,6 +47,25 @@ public class MainApplication {
 
         // start tomcat
         tomcat.start();
-        tomcat.getServer().await();
+        tomcat.getServer().await();*/
+
+        // custom spring
+        String packageName = "me.niloybiswas";
+        ClassLoader classLoader = MainApplication.class.getClassLoader();
+
+        URL resource = classLoader.getResource(Utils.convertPackageToPath(packageName));
+        System.out.println("resource = " + resource);
+
+        File resourceFile = new File(Objects.requireNonNull(resource).getPath());
+        /*File[] files = resourceFile.listFiles();
+        for (File file : files) {
+            System.out.println("file.getName() = " + file.getName());
+        }*/
+        List<String> files = Utils.recursiveFiles(resourceFile.getAbsolutePath());
+        for (String file : files) {
+            System.out.println("file = " + file);
+        }
     }
+
+
 }

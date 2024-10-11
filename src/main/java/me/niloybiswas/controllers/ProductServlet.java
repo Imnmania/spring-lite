@@ -37,7 +37,7 @@ public class ProductServlet extends HttpServlet {
 
         if (id == null) {
             List<Product> products = productController.getProducts();
-            SearchResponse searchResponse = SearchResponse.builder().products(products).build();
+            SearchResponse searchResponse = new SearchResponse(products);
             resp.getWriter().write(objectMapper.writeValueAsString(searchResponse));
             return;
         }

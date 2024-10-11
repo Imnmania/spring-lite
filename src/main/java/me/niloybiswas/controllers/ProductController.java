@@ -20,9 +20,15 @@ public class ProductController {
     }
 
     public AddProductResponse addProduct(AddProductRequest request) {
-        Product product = Product.builder().name(request.getName()).build();
+        Product product = new Product();
+        product.setName(request.getName());
+
         String id = productService.addProduct(product);
-        return AddProductResponse.builder().id(id).build();
+
+        AddProductResponse addProductResponse = new AddProductResponse();
+        addProductResponse.setId(id);
+
+        return addProductResponse;
     }
 
     public Product getProduct(String id) {
@@ -35,6 +41,6 @@ public class ProductController {
 
     public SearchResponse searchProduct(String name) {
         List<Product> products = searchService.search(name);
-        return SearchResponse.builder().products(products).build();
+        return new SearchResponse(products);
     }
 }
