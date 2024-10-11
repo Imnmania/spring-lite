@@ -14,11 +14,6 @@ public class ProductController {
     private ProductService productService;
     private SearchService searchService;
 
-    public ProductController(ProductService productService, SearchService searchService) {
-        this.productService = productService;
-        this.searchService = searchService;
-    }
-
     public AddProductResponse addProduct(AddProductRequest request) {
         Product product = new Product();
         product.setName(request.getName());

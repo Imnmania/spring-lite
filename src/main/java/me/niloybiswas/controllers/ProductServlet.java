@@ -19,10 +19,6 @@ public class ProductServlet extends HttpServlet {
 
     private ProductController productController;
 
-    public ProductServlet(ProductController productController) {
-        this.productController = productController;
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String uri = req.getRequestURI();

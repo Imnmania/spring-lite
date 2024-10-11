@@ -9,10 +9,6 @@ public class SearchService {
 
     private ProductService productService;
 
-    public SearchService(ProductService productService) {
-        this.productService = productService;
-    }
-
     public List<Product> search(String name) {
         List<Product> filteredProducts = new ArrayList<>();
         List<Product> products = productService.getAllProducts();

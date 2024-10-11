@@ -4,13 +4,14 @@ import me.niloybiswas.core.Utils;
 import org.apache.catalina.LifecycleException;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
 
 public class MainApplication {
-    public static void main(String[] args) throws LifecycleException, ClassNotFoundException {
+    public static void main(String[] args) throws LifecycleException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         /*Tomcat tomcat = new Tomcat();
         tomcat.setBaseDir("tmp");
         Connector connector = new Connector();
@@ -60,6 +61,8 @@ public class MainApplication {
         List<Class<?>> classes = Utils.getRecursiveClasses(resourceFile.getAbsolutePath(), packageName);
         for(Class<?> clazz : classes) {
             System.out.println("clazz.getName() = " + clazz.getName());
+            // creating a new instance of every class
+            Object newObject = clazz.getDeclaredConstructor().newInstance();
         }
     }
 }

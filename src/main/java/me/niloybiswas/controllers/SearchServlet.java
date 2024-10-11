@@ -13,10 +13,6 @@ public class SearchServlet extends HttpServlet {
 
     private ProductController productController;
 
-    public SearchServlet(ProductController productController) {
-        this.productController = productController;
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String searchQuery = req.getParameter("query");
