@@ -1,5 +1,6 @@
 package me.niloybiswas.services;
 
+import me.niloybiswas.spring_lite.annotations.Autowired;
 import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.models.Product;
 import me.niloybiswas.repositories.ProductRepository;
@@ -10,6 +11,7 @@ import java.util.UUID;
 @Component
 public class ProductService {
 
+    @Autowired
     private ProductRepository productRepository;
 
     public String addProduct(Product product) {

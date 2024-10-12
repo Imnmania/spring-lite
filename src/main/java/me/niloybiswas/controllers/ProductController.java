@@ -1,5 +1,6 @@
 package me.niloybiswas.controllers;
 
+import me.niloybiswas.spring_lite.annotations.Autowired;
 import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.dto.AddProductRequest;
 import me.niloybiswas.dto.AddProductResponse;
@@ -13,7 +14,9 @@ import java.util.List;
 @Component
 public class ProductController {
 
+    @Autowired
     private ProductService productService;
+    @Autowired
     private SearchService searchService;
 
     public AddProductResponse addProduct(AddProductRequest request) {

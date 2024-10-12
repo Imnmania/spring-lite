@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import me.niloybiswas.spring_lite.annotations.Autowired;
 import me.niloybiswas.spring_lite.annotations.Servlet;
 import me.niloybiswas.dto.SearchResponse;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 @Servlet(urlMapping = "/api/products/search")
 public class SearchServlet extends HttpServlet {
 
+    @Autowired
     private ProductController productController;
 
     @Override

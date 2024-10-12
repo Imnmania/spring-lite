@@ -1,5 +1,6 @@
 package me.niloybiswas.services;
 
+import me.niloybiswas.spring_lite.annotations.Autowired;
 import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.models.Product;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Component
 public class SearchService {
 
+    @Autowired
     private ProductService productService;
 
     public List<Product> search(String name) {

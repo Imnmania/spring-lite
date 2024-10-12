@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import me.niloybiswas.spring_lite.annotations.Autowired;
 import me.niloybiswas.spring_lite.annotations.Servlet;
 import me.niloybiswas.dto.AddProductRequest;
 import me.niloybiswas.dto.AddProductResponse;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 @Servlet(urlMapping = "/api/products/*")
 public class ProductServlet extends HttpServlet {
 
+    @Autowired
     private ProductController productController;
 
     @Override
