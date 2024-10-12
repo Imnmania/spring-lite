@@ -1,15 +1,12 @@
 package me.niloybiswas;
 
-import me.niloybiswas.core.Utils;
+import me.niloybiswas.spring_lite.SpringLiteApplication;
+import me.niloybiswas.spring_lite.annotations.PackageScan;
 import org.apache.catalina.LifecycleException;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.List;
-import java.util.Objects;
 
-
+@PackageScan(scanPackages = {"me.niloybiswas"})
 public class MainApplication {
     public static void main(String[] args) throws LifecycleException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         /*Tomcat tomcat = new Tomcat();
@@ -51,7 +48,7 @@ public class MainApplication {
         tomcat.getServer().await();*/
 
         // custom spring
-        String packageName = "me.niloybiswas";
+        /*String packageName = "me.niloybiswas";
         ClassLoader classLoader = MainApplication.class.getClassLoader();
 
         URL resource = classLoader.getResource(Utils.convertPackageToPath(packageName));
@@ -63,6 +60,8 @@ public class MainApplication {
             System.out.println("clazz.getName() = " + clazz.getName());
             // creating a new instance of every class
             Object newObject = clazz.getDeclaredConstructor().newInstance();
-        }
+        }*/
+
+        SpringLiteApplication.run(MainApplication.class);
     }
 }

@@ -1,5 +1,6 @@
 package me.niloybiswas.controllers;
 
+import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.dto.AddProductRequest;
 import me.niloybiswas.dto.AddProductResponse;
 import me.niloybiswas.dto.SearchResponse;
@@ -9,6 +10,7 @@ import me.niloybiswas.services.SearchService;
 
 import java.util.List;
 
+@Component
 public class ProductController {
 
     private ProductService productService;

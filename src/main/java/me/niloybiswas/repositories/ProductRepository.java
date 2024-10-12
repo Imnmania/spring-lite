@@ -1,5 +1,6 @@
 package me.niloybiswas.repositories;
 
+import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.models.Product;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class ProductRepository {
     private Map<String, Product> productMap;
 

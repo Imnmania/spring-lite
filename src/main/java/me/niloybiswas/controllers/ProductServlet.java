@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import me.niloybiswas.spring_lite.annotations.Servlet;
 import me.niloybiswas.dto.AddProductRequest;
 import me.niloybiswas.dto.AddProductResponse;
 import me.niloybiswas.dto.SearchResponse;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@Servlet(urlMapping = "/api/products/*")
 public class ProductServlet extends HttpServlet {
 
     private ProductController productController;

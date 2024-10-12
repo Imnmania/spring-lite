@@ -1,10 +1,12 @@
 package me.niloybiswas.services;
 
+import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.models.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class SearchService {
 
     private ProductService productService;

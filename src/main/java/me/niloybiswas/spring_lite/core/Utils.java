@@ -1,4 +1,4 @@
-package me.niloybiswas.core;
+package me.niloybiswas.spring_lite.core;
 
 import java.io.File;
 import java.util.ArrayList;
