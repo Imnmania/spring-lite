@@ -1,7 +1,7 @@
 package me.niloybiswas.controllers;
 
-import me.niloybiswas.spring_lite.annotations.Autowired;
-import me.niloybiswas.spring_lite.annotations.Component;
+import me.niloybiswas.spring_lite.MethodType;
+import me.niloybiswas.spring_lite.annotations.*;
 import me.niloybiswas.dto.AddProductRequest;
 import me.niloybiswas.dto.AddProductResponse;
 import me.niloybiswas.dto.SearchResponse;
@@ -12,6 +12,7 @@ import me.niloybiswas.services.SearchService;
 import java.util.List;
 
 @Component
+@RestController
 public class ProductController {
 
     @Autowired
@@ -19,7 +20,8 @@ public class ProductController {
     @Autowired
     private SearchService searchService;
 
-    public AddProductResponse addProduct(AddProductRequest request) {
+    @RequestMapping(url = "/api/products", type = MethodType.POST)
+    public AddProductResponse addProduct(@RequestBody AddProductRequest request) {
         Product product = new Product();
         product.setName(request.getName());
 
@@ -31,16 +33,13 @@ public class ProductController {
         return addProductResponse;
     }
 
-    public Product getProduct(String id) {
+    @RequestMapping(url = "/api/products/{id}", type = MethodType.GET)
+    public Product getProduct(@PathVariable(value = "id") String id) {
         return productService.getProduct(id);
     }
 
+    @RequestMapping(url = "/api/products", type = MethodType.GET)
     public List<Product> getProducts() {
         return productService.getAllProducts();
-    }
-
-    public SearchResponse searchProduct(String name) {
-        List<Product> products = searchService.search(name);
-        return new SearchResponse(products);
     }
 }

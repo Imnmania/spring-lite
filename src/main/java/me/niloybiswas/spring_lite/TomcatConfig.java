@@ -33,7 +33,7 @@ public class TomcatConfig {
         System.out.println("[STARTED] Spring Lite started on Port: " + port);
     }
 
-    public static void registerServlet(Object instance, Class<?> clazz, String urlMapping) {
+    protected void registerServlet(Object instance, Class<?> clazz, String urlMapping) {
         tomcat.addServlet(contextPath, clazz.getSimpleName(), (HttpServlet) instance);
         context.addServletMappingDecoded(urlMapping, clazz.getSimpleName());
     }

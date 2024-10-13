@@ -1,10 +1,10 @@
 package me.niloybiswas.spring_lite;
 
-import me.niloybiswas.spring_lite.annotations.Autowired;
-import me.niloybiswas.spring_lite.annotations.Component;
-import me.niloybiswas.spring_lite.annotations.Servlet;
+import me.niloybiswas.spring_lite.annotations.*;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +30,11 @@ public class ApplicationContext {
     protected void initContainers(List<Class<?>> classes) throws Exception {
         createBeans(classes);
         injectDependencies(classes);
-        registerServlets(classes);
+        registerDispatcherServlet(classes);
         tomcatConfig.start(serverPort);
     }
 
-    protected void createBeans(List<Class<?>> classes) throws Exception {
+    private void createBeans(List<Class<?>> classes) throws Exception {
         for (Class<?> clazz : classes) {
             if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class)) {
                 Object instance = clazz.getDeclaredConstructor().newInstance();
@@ -43,7 +43,7 @@ public class ApplicationContext {
         }
     }
 
-    protected void injectDependencies(List<Class<?>> classes) throws IllegalAccessException {
+    private void injectDependencies(List<Class<?>> classes) throws IllegalAccessException {
         for (Class<?> clazz : classes) {
             if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class)) {
                 Object clazzBean = getBean(getBeanName(clazz));
@@ -60,14 +60,33 @@ public class ApplicationContext {
         }
     }
 
-    protected void registerServlets(List<Class<?>> classes) {
+    private List<ControllerMethod> findControllerMethods(List<Class<?>> classes) throws Exception {
+        List<ControllerMethod> controllerMethods = new ArrayList<>();
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Servlet.class)) {
-                Servlet servlet = clazz.getAnnotation(Servlet.class);
-                Object instance = getBean(getBeanName(clazz));
-                TomcatConfig.registerServlet(instance, clazz, servlet.urlMapping());
+            if (clazz.isAnnotationPresent(RestController.class)) {
+                RestController restController = clazz.getAnnotation(RestController.class);
+                for (Method method : clazz.getDeclaredMethods()) {
+                    if (method.isAnnotationPresent(RequestMapping.class)) {
+                        RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                        ControllerMethod controllerMethod = ControllerMethod.builder()
+                                .clazz(clazz)
+                                .instance(getBean(getBeanName(clazz)))
+                                .method(method)
+                                .methodType(requestMapping.type())
+                                .url(requestMapping.url())
+                                .build();
+                        System.out.println("controllerMethod = " + controllerMethod);
+                        controllerMethods.add(controllerMethod);
+                    }
+                }
             }
         }
+        return controllerMethods;
+    }
+
+    private void registerDispatcherServlet(List<Class<?>> classes) throws Exception {
+        DispatcherServlet dispatcherServlet = new DispatcherServlet(findControllerMethods(classes));
+        tomcatConfig.registerServlet(dispatcherServlet, dispatcherServlet.getClass(), "/");
     }
 
     private Object getBean(String name) {
