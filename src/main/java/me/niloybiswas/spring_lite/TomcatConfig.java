@@ -1,4 +1,4 @@
-package me.niloybiswas.spring_lite.server;
+package me.niloybiswas.spring_lite;
 
 import jakarta.servlet.http.HttpServlet;
 import org.apache.catalina.Context;
@@ -11,24 +11,26 @@ import java.io.File;
 public class TomcatConfig {
     private static Tomcat tomcat;
     private static Context context;
-
     private static final String contextPath = "";
 
-    public static void initTomcat() throws LifecycleException {
-        int port = 9999;
+    public TomcatConfig(int port) {
+        initTomcat(port);
+    }
+
+    private void initTomcat(int port) {
         tomcat = new Tomcat();
         tomcat.setPort(port);
         tomcat.getConnector();
-
-        Host host = tomcat.getHost();
-        host.setName("localhost");
-        host.setAppBase("webapps");;
-
-        tomcat.start();
-        System.out.println("[STARTED] Spring Lite started on Port: " + port);
-
         String docBase = new File(".").getAbsolutePath();
         context = tomcat.addContext(contextPath, docBase);
+    }
+
+    protected void start(int port) throws LifecycleException {
+        Host host = tomcat.getHost();
+        host.setName("localhost");
+        host.setAppBase("webapps");
+        tomcat.start();
+        System.out.println("[STARTED] Spring Lite started on Port: " + port);
     }
 
     public static void registerServlet(Object instance, Class<?> clazz, String urlMapping) {
