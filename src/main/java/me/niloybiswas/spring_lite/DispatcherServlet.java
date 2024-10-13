@@ -1,5 +1,6 @@
 package me.niloybiswas.spring_lite;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,8 +14,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class DispatcherServlet extends HttpServlet {
 
@@ -64,11 +65,13 @@ public class DispatcherServlet extends HttpServlet {
                 String requestBody = readRequestBody(req, methodType);
                 Object responseObject = invokeMethod(req, resp, controllerMethod, pathVariableMap, requestBody);
                 // Write to response
+                if (responseObject == null) return;
                 resp.setContentType("application/json");
                 resp.setCharacterEncoding("UTF-8");
                 resp.getWriter().write(objectMapper.writeValueAsString(responseObject));
                 return;
             }
+            sendNotFoundResponse(req, resp);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -99,6 +102,9 @@ public class DispatcherServlet extends HttpServlet {
             if (parameters[i].getType().equals(HttpServletRequest.class)) {
                 parameterObjects[i] = req;
             }
+            if (parameters[i].getType().equals(HttpServletResponse.class)) {
+                parameterObjects[i] = resp;
+            }
         }
 
         return controllerMethod.getMethod().invoke(controllerMethod.getInstance(), parameterObjects);
@@ -120,5 +126,19 @@ public class DispatcherServlet extends HttpServlet {
             }
         }
         return null;
+    }
+
+    private void sendNotFoundResponse(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        Map<String, Object> responseMap = new LinkedHashMap<>();
+        responseMap.put("status", HttpServletResponse.SC_NOT_FOUND);
+        responseMap.put("message", "Requested URL Not Found");
+        responseMap.put("url", req.getRequestURL().toString());
+        responseMap.put("timestamp", LocalDateTime.now().toString());
+
+        resp.getWriter().write(objectMapper.writeValueAsString(responseMap));
     }
 }
