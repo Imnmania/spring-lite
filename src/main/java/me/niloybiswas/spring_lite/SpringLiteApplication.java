@@ -26,9 +26,6 @@ public class SpringLiteApplication {
             String filePath = resource.getPath();
             classes.addAll(ClassScanner.getRecursiveClasses(filePath, packageName));
         }
-        for (Class<?> clazz : classes) {
-            System.out.println("Class loaded => " + clazz.getName());
-        }
         return classes;
     }
 }

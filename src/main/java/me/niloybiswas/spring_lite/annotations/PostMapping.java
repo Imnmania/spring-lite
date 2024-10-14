@@ -8,8 +8,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-public @interface RequestMapping {
+@Target(ElementType.METHOD)
+public @interface PostMapping {
     String url() default "";
-    MethodType type() default MethodType.GET;
+    MethodType methodType() default MethodType.POST;
 }

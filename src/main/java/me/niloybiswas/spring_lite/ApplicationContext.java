@@ -1,6 +1,7 @@
 package me.niloybiswas.spring_lite;
 
 import me.niloybiswas.spring_lite.annotations.*;
+import me.niloybiswas.spring_lite.core.Utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,18 +37,18 @@ public class ApplicationContext {
 
     private void createBeans(List<Class<?>> classes) throws Exception {
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class)) {
+            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class)) {
                 Object instance = clazz.getDeclaredConstructor().newInstance();
                 beanFactory.put(getBeanName(clazz), instance);
+                System.out.println(Utils.getPartialGreenText("[Bean Created]: ") + clazz.getCanonicalName());
             }
         }
     }
 
     private void injectDependencies(List<Class<?>> classes) throws IllegalAccessException {
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class)) {
+            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class)) {
                 Object clazzBean = getBean(getBeanName(clazz));
-
                 Field[] declaredFields = clazz.getDeclaredFields();
                 for (Field field : declaredFields) {
                     if (field.isAnnotationPresent(Autowired.class)) {
@@ -64,7 +65,11 @@ public class ApplicationContext {
         List<ControllerMethod> controllerMethods = new ArrayList<>();
         for (Class<?> clazz : classes) {
             if (clazz.isAnnotationPresent(RestController.class)) {
-                RestController restController = clazz.getAnnotation(RestController.class);
+                String basePath = "";
+                if (clazz.isAnnotationPresent(RequestMapping.class)) {
+                    RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
+                    basePath = requestMapping.url();
+                }
                 for (Method method : clazz.getDeclaredMethods()) {
                     if (method.isAnnotationPresent(RequestMapping.class)) {
                         RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
@@ -73,9 +78,57 @@ public class ApplicationContext {
                                 .instance(getBean(getBeanName(clazz)))
                                 .method(method)
                                 .methodType(requestMapping.type())
-                                .url(requestMapping.url())
+                                .url(basePath + requestMapping.url())
                                 .build();
-                        System.out.println("controllerMethod = " + controllerMethod);
+                        System.out.println("[REQUEST_MAPPING] = " + Utils.getPartialBlueText(controllerMethod.getUrl()));
+                        controllerMethods.add(controllerMethod);
+                    }
+                    if (method.isAnnotationPresent(GetMapping.class)) {
+                        GetMapping getMapping = method.getAnnotation(GetMapping.class);
+                        ControllerMethod controllerMethod = ControllerMethod.builder()
+                                .clazz(clazz)
+                                .instance(getBean(getBeanName(clazz)))
+                                .method(method)
+                                .methodType(getMapping.methodType())
+                                .url(basePath + getMapping.url())
+                                .build();
+                        System.out.println(Utils.getPartialGreenText("[GET]: ") + Utils.getPartialBlueText(controllerMethod.getUrl()));
+                        controllerMethods.add(controllerMethod);
+                    }
+                    if (method.isAnnotationPresent(PostMapping.class)) {
+                        PostMapping postMapping = method.getAnnotation(PostMapping.class);
+                        ControllerMethod controllerMethod = ControllerMethod.builder()
+                                .clazz(clazz)
+                                .instance(getBean(getBeanName(clazz)))
+                                .method(method)
+                                .methodType(postMapping.methodType())
+                                .url(basePath + postMapping.url())
+                                .build();
+                        System.out.println(Utils.getPartialGreenText("[POST]: ") + Utils.getPartialBlueText(controllerMethod.getUrl()));
+                        controllerMethods.add(controllerMethod);
+                    }
+                    if (method.isAnnotationPresent(PutMapping.class)) {
+                        PutMapping putMapping = method.getAnnotation(PutMapping.class);
+                        ControllerMethod controllerMethod = ControllerMethod.builder()
+                                .clazz(clazz)
+                                .instance(getBean(getBeanName(clazz)))
+                                .method(method)
+                                .methodType(putMapping.methodType())
+                                .url(basePath + putMapping.url())
+                                .build();
+                        System.out.println(Utils.getPartialGreenText("[PUT]: ") + Utils.getPartialBlueText(controllerMethod.getUrl()));
+                        controllerMethods.add(controllerMethod);
+                    }
+                    if (method.isAnnotationPresent(DeleteMapping.class)) {
+                        DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
+                        ControllerMethod controllerMethod = ControllerMethod.builder()
+                                .clazz(clazz)
+                                .instance(getBean(getBeanName(clazz)))
+                                .method(method)
+                                .methodType(deleteMapping.methodType())
+                                .url(basePath + deleteMapping.url())
+                                .build();
+                        System.out.println(Utils.getPartialGreenText("[DELETE]: ") + Utils.getPartialBlueText(controllerMethod.getUrl()));
                         controllerMethods.add(controllerMethod);
                     }
                 }

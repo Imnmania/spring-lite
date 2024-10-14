@@ -30,7 +30,7 @@ public class TomcatConfig {
         host.setName("localhost");
         host.setAppBase("webapps");
         tomcat.start();
-        System.out.println("[STARTED] Spring Lite started on Port: " + port);
+        System.out.println("\u001B[34m" + "[STARTED] \uD83C\uDF3F Spring Lite started on Port: " + port + "\u001B[0m");
     }
 
     protected void registerServlet(Object instance, Class<?> clazz, String urlMapping) {
