@@ -1,11 +1,28 @@
 package me.niloybiswas.spring_lite.core;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Utils {
-    public static String convertPackageToPath(String packageName) {
-        return packageName.replace(".", "/");
+
+    public static void printRedText(String text) {
+        System.out.println(AnsiColor.RED + text + AnsiColor.RESET);
+    }
+
+    public static void printBlueText(String text) {
+        System.out.println(AnsiColor.BLUE + text + AnsiColor.RESET);
+    }
+
+    public static void printGreenText(String text) {
+        System.out.println(AnsiColor.GREEN + text + AnsiColor.RESET);
+    }
+
+    public static String getPartialRedText(String text) {
+        return AnsiColor.RED + text + AnsiColor.RESET;
+    }
+
+    public static String getPartialBlueText(String text) {
+        return AnsiColor.BLUE + text + AnsiColor.RESET;
+    }
+
+    public static String getPartialGreenText(String text) {
+        return AnsiColor.GREEN + text + AnsiColor.RESET;
     }
 }
