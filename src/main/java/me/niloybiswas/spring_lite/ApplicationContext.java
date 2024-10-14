@@ -37,7 +37,7 @@ public class ApplicationContext {
 
     private void createBeans(List<Class<?>> classes) throws Exception {
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class)) {
+            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class) || clazz.isAnnotationPresent(Service.class)) {
                 Object instance = clazz.getDeclaredConstructor().newInstance();
                 beanFactory.put(getBeanName(clazz), instance);
                 System.out.println(Utils.getPartialGreenText("[Bean Created]: ") + clazz.getCanonicalName());
@@ -47,7 +47,7 @@ public class ApplicationContext {
 
     private void injectDependencies(List<Class<?>> classes) throws IllegalAccessException {
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class)) {
+            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class) || clazz.isAnnotationPresent(Service.class)) {
                 Object clazzBean = getBean(getBeanName(clazz));
                 Field[] declaredFields = clazz.getDeclaredFields();
                 for (Field field : declaredFields) {

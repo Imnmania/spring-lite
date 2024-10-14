@@ -4,11 +4,13 @@ import me.niloybiswas.spring_lite.annotations.Autowired;
 import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.models.Product;
 import me.niloybiswas.repositories.ProductRepository;
+import me.niloybiswas.spring_lite.annotations.Service;
+import me.niloybiswas.spring_lite.annotations.Servlet;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
 public class ProductService {
 
     @Autowired

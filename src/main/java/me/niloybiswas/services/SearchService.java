@@ -3,11 +3,12 @@ package me.niloybiswas.services;
 import me.niloybiswas.spring_lite.annotations.Autowired;
 import me.niloybiswas.spring_lite.annotations.Component;
 import me.niloybiswas.models.Product;
+import me.niloybiswas.spring_lite.annotations.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 public class SearchService {
 
     @Autowired
