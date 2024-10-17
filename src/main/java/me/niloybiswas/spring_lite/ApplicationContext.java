@@ -23,7 +23,8 @@ public class ApplicationContext {
 
     public static synchronized ApplicationContext getInstance() {
         if (instance == null) {
-            return new ApplicationContext();
+            instance = new ApplicationContext();
+            return instance;
         }
         return instance;
     }
