@@ -1,9 +1,12 @@
 package me.niloybiswas.spring_lite.core;
 
+import me.niloybiswas.spring_lite.annotations.Component;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
 public class Environment {
 
     public Environment() {
@@ -15,7 +18,13 @@ public class Environment {
     private static final Map<String, Object> PROPERTIES = new HashMap<>();
 
     public String getProperty(String key) {
-        return (String) PROPERTIES.get(key);
+        if (key.startsWith("${") && key.endsWith("}")) {
+            key = key.replaceAll("\\$", "");
+            key = key.replaceAll("\\{", "");
+            key = key.replaceAll("}", "");
+            return (String) PROPERTIES.get(key);
+        }
+        return null;
     }
 
     private void readPropertiesFile() {

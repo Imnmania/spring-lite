@@ -1,6 +1,7 @@
 package me.niloybiswas.spring_lite;
 
 import me.niloybiswas.spring_lite.annotations.*;
+import me.niloybiswas.spring_lite.core.Environment;
 import me.niloybiswas.spring_lite.core.Utils;
 
 import java.lang.reflect.Field;
@@ -32,6 +33,7 @@ public class ApplicationContext {
     protected void initContainers(List<Class<?>> classes) throws Exception {
         createBeans(classes);
         injectDependencies(classes);
+        injectEnvironmentValues(classes);
         registerDispatcherServlet(classes);
         tomcatConfig.start(serverPort);
     }
@@ -57,6 +59,24 @@ public class ApplicationContext {
                         field.setAccessible(true);
                         field.set(clazzBean, dependentBean);
                     }
+                }
+            }
+        }
+    }
+
+    private void injectEnvironmentValues(List<Class<?>> classes) throws IllegalAccessException, RuntimeException {
+        Environment environment = (Environment) getBean(Environment.class, classes);
+        if (environment == null) {
+            throw new RuntimeException("Environment could not be found!!!");
+        }
+        for (Class<?> clazz : classes) {
+            Object bean = getBean(getBeanName(clazz));
+            Field[] declaredFields = clazz.getDeclaredFields();
+            for (Field field : declaredFields) {
+                if (field.isAnnotationPresent(Value.class)) {
+                    Value valueAnnotation = field.getAnnotation(Value.class);
+                    field.setAccessible(true);
+                    field.set(bean, environment.getProperty(valueAnnotation.key()));
                 }
             }
         }
@@ -150,5 +170,14 @@ public class ApplicationContext {
     private String getBeanName(Class<?> clazz) {
         String[] parts = clazz.getName().split("\\.");
         return parts[parts.length - 1].toLowerCase();
+    }
+
+    private Object getBean(Class<?> targetClass, List<Class<?>> classes) {
+        for (Class<?> clazz : classes) {
+            if (clazz.getTypeName().equals(targetClass.getTypeName())) {
+                return beanFactory.get(getBeanName(clazz));
+            }
+        }
+        return null;
     }
 }
