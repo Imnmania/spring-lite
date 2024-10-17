@@ -12,7 +12,6 @@ import java.util.Map;
 @PackageScan(scanPackages = {"me.niloybiswas"})
 public class MainApplication {
     public static void main(String[] args) throws Exception {
-//        SpringLiteApplication.run(MainApplication.class);
-        new Environment();
+        SpringLiteApplication.run(MainApplication.class);
     }
 }
