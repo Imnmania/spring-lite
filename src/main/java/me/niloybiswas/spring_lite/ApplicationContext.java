@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class ApplicationContext {
     private final Map<String, Object> beanFactory = new HashMap<>();
-//    private final int serverPort = 9999;
+
     private TomcatConfig tomcatConfig;
 
     private static ApplicationContext instance;
@@ -40,7 +40,8 @@ public class ApplicationContext {
 
     private void createBeans(List<Class<?>> classes) throws Exception {
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class) || clazz.isAnnotationPresent(Service.class)) {
+            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class)
+                    || clazz.isAnnotationPresent(RestController.class) || clazz.isAnnotationPresent(Service.class)) {
                 Object instance = clazz.getDeclaredConstructor().newInstance();
                 beanFactory.put(getBeanName(clazz), instance);
                 System.out.println(Utils.getPartialGreenText("[Bean Created]: ") + clazz.getCanonicalName());
@@ -50,7 +51,8 @@ public class ApplicationContext {
 
     private void injectDependencies(List<Class<?>> classes) throws IllegalAccessException {
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class) || clazz.isAnnotationPresent(RestController.class) || clazz.isAnnotationPresent(Service.class)) {
+            if (clazz.isAnnotationPresent(Component.class) || clazz.isAnnotationPresent(Servlet.class)
+                    || clazz.isAnnotationPresent(RestController.class) || clazz.isAnnotationPresent(Service.class)) {
                 Object clazzBean = getBean(getBeanName(clazz));
                 Field[] declaredFields = clazz.getDeclaredFields();
                 for (Field field : declaredFields) {
