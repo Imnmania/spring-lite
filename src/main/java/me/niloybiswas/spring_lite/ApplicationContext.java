@@ -3,6 +3,7 @@ package me.niloybiswas.spring_lite;
 import me.niloybiswas.spring_lite.annotations.*;
 import me.niloybiswas.spring_lite.core.Environment;
 import me.niloybiswas.spring_lite.core.Utils;
+import org.apache.catalina.LifecycleException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,14 +14,12 @@ import java.util.Map;
 
 public class ApplicationContext {
     private final Map<String, Object> beanFactory = new HashMap<>();
-    private final int serverPort = 9999;
-    private final TomcatConfig tomcatConfig;
+//    private final int serverPort = 9999;
+    private TomcatConfig tomcatConfig;
 
     private static ApplicationContext instance;
 
-    private ApplicationContext() {
-        tomcatConfig = new TomcatConfig(serverPort);
-    }
+    private ApplicationContext() {}
 
     public static synchronized ApplicationContext getInstance() {
         if (instance == null) {
@@ -34,8 +33,9 @@ public class ApplicationContext {
         createBeans(classes);
         injectDependencies(classes);
         injectEnvironmentValues(classes);
+        initTomcatConfig(classes);
         registerDispatcherServlet(classes);
-        tomcatConfig.start(serverPort);
+        startTomcatServer();
     }
 
     private void createBeans(List<Class<?>> classes) throws Exception {
@@ -156,6 +156,24 @@ public class ApplicationContext {
             }
         }
         return controllerMethods;
+    }
+
+    private void initTomcatConfig(List<Class<?>> classes) {
+        tomcatConfig = (TomcatConfig) getBean(TomcatConfig.class, classes);
+        if (tomcatConfig == null) {
+            Utils.printRedText("[Tomcat] TomcatConfig bean not be found");
+            throw new RuntimeException("TomcatConfig could not be found!!!");
+        }
+        tomcatConfig.initTomcat();
+    }
+
+    private void startTomcatServer() {
+        try {
+            tomcatConfig.start();
+        } catch (LifecycleException e) {
+            Utils.printRedText("[Tomcat] Tomcat could not be started!!!");
+            throw new RuntimeException(e);
+        }
     }
 
     private void registerDispatcherServlet(List<Class<?>> classes) throws Exception {

@@ -33,24 +33,25 @@ public class Environment {
 
             // find default profile
             String defaultProfileFileName = getDefaultProfilePropertiesFileName();
-            System.out.println("[Default Profile File] => " + defaultProfileFileName);
+            /*System.out.println("[Default Profile File] => " + defaultProfileFileName);*/
 
             // write default profile properties to propertiesMap
             writePropertiesValuesToMap(Collections.singletonList(defaultProfileFileName), propertiesMap);
-            System.out.println("[propertiesMap] => " + propertiesMap);
+            /*System.out.println("[propertiesMap] => " + propertiesMap);*/
 
             // find active profiles
             List<String> activeProfileNames = getActiveProfileNames(propertiesMap);
             List<String> activeProfileFileNames = getActiveProfilePropertiesFileNames(activeProfileNames);
-            System.out.println("[active profiles] => " + Arrays.toString(activeProfileNames.toArray()));
-            System.out.println("[active profile files] => " + Arrays.toString(activeProfileFileNames.toArray()));
+            System.out.println(Utils.getPartialGreenText("[Active Profiles]: ") + Arrays.toString(activeProfileNames.toArray()));
+            /*System.out.println("[active profile files] => " + Arrays.toString(activeProfileFileNames.toArray()));*/
 
             // write active profiles properties to propertiesMap
             writePropertiesValuesToMap(activeProfileFileNames, propertiesMap);
-            System.out.println("[updated propertiesMap] = " + propertiesMap);
+            /*System.out.println("[updated propertiesMap] = " + propertiesMap);*/
 
             PROPERTIES.putAll(propertiesMap);
         } catch (Exception e) {
+            Utils.printRedText("[ERROR]: Failed to read properties file!");
             e.printStackTrace();
         }
     }

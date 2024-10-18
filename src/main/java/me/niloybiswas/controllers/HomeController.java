@@ -11,7 +11,7 @@ import java.io.IOException;
 @RestController
 public class HomeController {
 
-    @Value(key = "${dev.value}")
+    @Value(key = "${spring.profiles.active}")
     private String profileName;
 
     @GetMapping(url = "/")
