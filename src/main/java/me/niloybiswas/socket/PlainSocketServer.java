@@ -7,10 +7,14 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 public class PlainSocketServer {
+
+    private static Map<String, SessionData> sessionDataMap = new HashMap<>();
 
     public static void main(String[] args) {
         int port = 9999;
@@ -97,11 +101,16 @@ public class PlainSocketServer {
     private static String writeHttpResponse(OutputStream outputStream) {
         try {
             String sessionId = UUID.randomUUID().toString();
+
+            sessionDataMap.put(sessionId, SessionData.builder()
+                            .lastVisitedTime(System.currentTimeMillis())
+                            .build());
+
             // Send a response back to the client
             String response = "HTTP/1.1 200 OK\r\n"
                     + "Content-Type: text/html\r\n"
                     + "Content-Length: " + "22\r\n"
-                    + "Set-Cookie: JSESSIONID=" + sessionId + "; HttpOnly\r\n"
+                    + "Set-Cookie: JSESSIONID=" + sessionDataMap + "; HttpOnly\r\n"
                     + "\r\n"
                     + "Received your request!";
             outputStream.write(response.getBytes());

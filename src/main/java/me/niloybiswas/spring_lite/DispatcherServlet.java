@@ -1,10 +1,7 @@
 package me.niloybiswas.spring_lite;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 import me.niloybiswas.spring_lite.annotations.PathVariable;
 import me.niloybiswas.spring_lite.annotations.RequestBody;
 import me.niloybiswas.spring_lite.annotations.RequestParam;
@@ -52,11 +49,8 @@ public class DispatcherServlet extends HttpServlet {
             String requestURI = req.getRequestURI();
             System.out.println("requestURI = " + requestURI);
 
-            Cookie[] cookies = req.getCookies();
-            for (Cookie cookie : cookies) {
-                System.out.println("cookie.getName() = " + cookie.getName());
-                System.out.println("cookie.getValue() = " + cookie.getValue());
-            }
+            HttpSession httpSession = req.getSession(true);
+            httpSession.setAttribute("hello", "world");
 
             for (ControllerMethod controllerMethod : controllerMethodList) {
                 if (controllerMethod.getMethodType() != methodType) {
